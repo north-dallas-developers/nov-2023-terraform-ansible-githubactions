@@ -1,0 +1,18 @@
+[Unit]
+Description=North Dallas Developers app
+
+[Service]
+ExecStart=/opt/apps/nddg-nov-2023-dotnet/nddg-nov-2023-dotnet
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=ndd-app
+# This user should exist on the server and have ownership of the deployment directory
+User=app
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://*:8080
+Environment=CONTENT_ROOT=/opt/apps/nddg-nov-2023-dotnet
+
+[Install]
+WantedBy=multi-user.target

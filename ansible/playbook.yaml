@@ -1,0 +1,57 @@
+- name: Playbook to setup EC2
+  hosts: [servers]
+
+  vars:
+    app_name: north-dallas-developers
+    app_path: /home/ubuntu/deployedapp
+    service_file_name: north-dallas-developers.service
+  
+  tasks:
+
+    # environment setup
+
+    # If you need to load an environment variable this way, but we aren't using it
+    # - name: customize /etc/environment
+    #   become_user: root
+    #   become: true
+    #   ansible.builtin.lineinfile:
+    #     dest: "/etc/environment"
+    #     state: present
+    #     line: "ASPNETCORE_URLS=http://*:8080"
+
+    # systemd
+
+    - name: Copy the systemd service file
+      become_user: root
+      become: true
+      copy:
+        src: "{{ service_file_name }}"
+        dest: /etc/systemd/system/{{ service_file_name }}
+        owner: root
+        group: root
+        mode: 0644
+    
+    - name: Start the service
+      become_user: root
+      become: true
+      systemd:
+        name: "{{ service_file_name}}"
+        state: started
+
+    # create a user with only necessary permissions to run the app
+
+    - name: Create the new user
+      become_user: root
+      become: true
+      user:
+        name: app
+        state: present
+
+    - name: Create the folder 
+      become_user: root
+      become: true
+      file:
+        path: /opt/apps/nddg-nov-2023-dotnet
+        state: directory
+        owner: ubuntu
+        mode: "0755"
