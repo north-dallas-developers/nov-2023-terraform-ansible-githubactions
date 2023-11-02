@@ -14,6 +14,6 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-        ViewData["TestMessage"] = "This is a test message.";
+        ViewData["TestMessage"] = "k8s rocks. Also κυβερνήτης is a Greek word.";
     }
 }
